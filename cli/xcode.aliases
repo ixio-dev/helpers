@@ -1,0 +1,2 @@
+alias xcgetver='xcrun agvtool what-version -terse'
+alias xcsetver='xcrun agvtool new-version -all $*'

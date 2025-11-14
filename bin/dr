@@ -1,0 +1,6 @@
+#!/bin/bash -e
+FOLDER="$1"
+NAME=$(re "$FOLDER")
+echo Installing $NAME
+cargo install --path "$FOLDER" && $NAME completion zsh > ~/.oh-my-zsh/custom/completions/_$NAME
+echo Done

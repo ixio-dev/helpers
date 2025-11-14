@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Check if folder argument is provided
+if [ $# -eq 0 ]; then
+    echo "Error: No folder specified" >&2
+    echo "Usage: $0 <folder>" >&2
+    exit 1
+fi
+
+FOLDER="$1"
+
+# Check if folder exists
+if [ ! -d "$FOLDER" ]; then
+    echo "Error: Folder '$FOLDER' does not exist" >&2
+    exit 1
+fi
+
+# Check if Cargo.toml exists
+CARGO_TOML="$FOLDER/Cargo.toml"
+if [ ! -f "$CARGO_TOML" ]; then
+    echo "Error: No Cargo project found in '$FOLDER' (Cargo.toml not found)" >&2
+    exit 1
+fi
+
+# Extract binary name from Cargo.toml
+# Look for 'name = "..."' in the [[bin]] section
+EXECUTABLE=$(grep -A 10 '^\[\[bin\]\]' "$CARGO_TOML" | grep '^name' | head -n 1 | sed -E 's/.*"([^"]+)".*/\1/')
+
+# Check if we found a name
+if [ -z "$EXECUTABLE" ]; then
+    echo "Error: Could not extract executable name from Cargo.toml" >&2
+    exit 1
+fi
+
+# Output the executable name
+echo "$EXECUTABLE"
